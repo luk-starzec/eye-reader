@@ -1,0 +1,21 @@
+{
+    "title": "BB & b",
+    "chapters": [
+      {
+        "title": "a a",
+        "order": 1,
+        "path": "a-a"
+      },
+      {
+        "title": "ccc",
+        "order": 3,
+        "path": "ccc"
+      },
+      {
+        "title": "b b",
+        "order": 2,
+        "path": "b-b"
+      }
+    ]
+  }
+  
