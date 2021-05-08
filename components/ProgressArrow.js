@@ -54,12 +54,12 @@ const ProgressArrow = ({ type, progress }) => {
 
   return (
     <StyledWrapper progress={progress ?? 0}>
-      <StyledRing
+      {/* <StyledRing
         radius={ringRadius}
         stroke={6}
         progress={progress}
         color="green"
-      />
+      /> */}
       <StyledArrow src="/assets/arrow-icon.svg" rotate={rotate} />
     </StyledWrapper>
   );

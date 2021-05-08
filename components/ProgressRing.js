@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const StyledCircle = styled.circle`
-  transition: 0.1s stroke-dashoffset;
   transform: rotate(-90deg);
   transform-origin: 50% 50%;
 `;

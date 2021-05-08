@@ -26,30 +26,36 @@ const WebGazer = ({ getPoint }) => {
 
   const loadScript = (scriptId) => {
     const script = document.createElement("script");
-    script.src = "https://webgazer.cs.brown.edu/webgazer.js?";
+    script.src = "https://webgazer.cs.brown.edu/webgazer.js";
     script.id = scriptId;
     script.async = true;
     script.onload = () => handleScriptLoad();
     document.body.appendChild(script);
   };
-  const handleScriptLoad = (resume = false) => {
-    console.log("script loaded");
 
+  const handleScriptLoad = (resume = false) => {
     window.saveDataAcrossSessions = true;
 
+    let readinessCounter = 0;
     webgazer.setGazeListener((data, timestamp) => {
-      if (data == null) return;
+      if (!isReady) {
+        readinessCounter++;
+        if (readinessCounter > 5) {
+          setIsReady(true);
+        }
+      }
 
-      if (!isReady) setIsReady(true);
-
-      getPoint(data.x, data.y, timestamp);
+      if (data != null) {
+        getPoint(data.x, data.y, timestamp);
+      }
     });
 
     resume ? webgazer.resume() : webgazer.begin();
 
     webgazer.showVideoPreview(false).showPredictionPoints(true);
   };
-  return <div>{isReady ? "OK" : "Loading..."}</div>;
+
+  return <div>{isReady ? "Ready" : "Loading..."}</div>;
 };
 
 export default WebGazer;

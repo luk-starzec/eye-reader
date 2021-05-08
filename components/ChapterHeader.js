@@ -39,11 +39,6 @@ const ChapterHeader = ({ book, className }) => {
       </Link>
 
       <StyledTitle>{book.title}</StyledTitle>
-
-      <div>
-          Status:
-      </div>
-      
     </StyledWrapper>
   );
 };
