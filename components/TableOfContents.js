@@ -1,16 +1,25 @@
+import Link from "next/link";
 import React from "react";
+import styled from "styled-components";
 
-const TableOfContents = ({ chapters }) => {
+const StyledList = styled.ol``;
+const StyledItem = styled.li``;
+
+const TableOfContents = ({ chapters, bookPath }) => {
   if (chapters == null) return "";
 
   return (
-    <ul>
+    <StyledList>
       {chapters
         .sort((a, b) => a.order - b.order)
         .map((chapter) => (
-          <li key={chapter.path}>{chapter.title}</li>
+          <StyledItem key={chapter.path}>
+            <Link href={`/books/${bookPath}/${chapter.path}`}>
+              <a>{chapter.title}</a>
+            </Link>
+          </StyledItem>
         ))}
-    </ul>
+    </StyledList>
   );
 };
 

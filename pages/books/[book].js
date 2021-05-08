@@ -1,12 +1,16 @@
 import { getBooks, getBook } from "../../helpers/booksData";
-import TableOfContents from "../../components/TableOfContents";
+import Book from "../../components/Book";
+import styled from 'styled-components'
 
-function Book({ book }) {
+const StyledWrapper=styled.div`
+
+`
+
+function BookPage({ book }) {
   return (
-    <div>
-      {<h3>{book.title}</h3>}
-      <TableOfContents chapters={book.chapters} />
-    </div>
+    <StyledWrapper>
+        <Book book={book}/>
+    </StyledWrapper>
   );
 }
 
@@ -36,4 +40,4 @@ export async function getStaticProps(context) {
   };
 }
 
-export default Book;
+export default BookPage;
