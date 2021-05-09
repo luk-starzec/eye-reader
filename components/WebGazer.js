@@ -12,7 +12,21 @@ const pauseDataCollection = () => {
   }
 };
 
-const WebGazer = ({ getPoint }) => {
+const resetListener = (getPoint) => {
+  webgazer.clearGazeListener();
+  webgazer.setGazeListener((data, timestamp) => {
+    if (data != null && getPoint != null) {
+      getPoint(data.x, data.y, timestamp);
+    }
+  });
+};
+
+const resetData = () => {
+  if (webgazer) {
+    webgazer.clearData();
+  }
+};
+const WebGazer = ({ getPoint, book, chapter, className, preview = false }) => {
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
@@ -23,6 +37,10 @@ const WebGazer = ({ getPoint }) => {
 
     return () => pauseDataCollection();
   }, []);
+
+  useEffect(() => {
+    isReady && resetListener(getPoint);
+  }, [book, chapter, isReady]);
 
   const loadScript = (scriptId) => {
     const script = document.createElement("script");
@@ -38,24 +56,23 @@ const WebGazer = ({ getPoint }) => {
 
     let readinessCounter = 0;
     webgazer.setGazeListener((data, timestamp) => {
-      if (!isReady) {
-        readinessCounter++;
-        if (readinessCounter > 5) {
-          setIsReady(true);
-        }
-      }
-
-      if (data != null) {
-        getPoint(data.x, data.y, timestamp);
+      readinessCounter++;
+      if (readinessCounter > 5) {
+        setIsReady(true);
       }
     });
 
     resume ? webgazer.resume() : webgazer.begin();
 
-    webgazer.showVideoPreview(false).showPredictionPoints(true);
+    webgazer.showVideoPreview(preview).showPredictionPoints(true);
   };
 
-  return <div>{isReady ? "Ready" : "Loading..."}</div>;
+  return (
+    <div className={className}>
+      {isReady ? "Gotowy" : "Czekaj..."}
+      <button onClick={resetData}>Reset</button>
+    </div>
+  );
 };
 
 export default WebGazer;

@@ -1,8 +1,17 @@
-import { getBooks, getChapter } from "../../../helpers/booksData";
-import Link from "next/link";
+import { useRouter } from "next/router";
 import styled from "styled-components";
+import { getBooks, getChapter } from "../../../helpers/booksData";
+import {
+  getBoundaries,
+  getDirection,
+  DIRECTION_UP,
+  DIRECTION_DOWN,
+  DIRECTION_LEFT,
+  DIRECTION_RIGHT,
+  DIRECTION_STOP,
+} from "../../../helpers/buttonsHelper";
 import Chapter from "../../../components/Chapter";
-import ProgressArrow, {
+import {
   ARROW_UP,
   ARROW_DOWN,
   ARROW_LEFT,
@@ -15,10 +24,15 @@ import WebGazer from "../../../components/WebGazer";
 
 const GRID_ROW_HEADER = 5;
 const GRID_ROW_BUTTON = 15;
+const GRID_COLUMN_BUTTON = 15;
+
+const LOOK_DELAY = 500;
+let startLookTime = Number.POSITIVE_INFINITY;
+let lookDirection = null;
 
 const StyledWrapper = styled.div`
   display: grid;
-  grid-template-columns: 15vw 70vw 15vw;
+  grid-template-columns: ${GRID_COLUMN_BUTTON}vw 70vw ${GRID_COLUMN_BUTTON}vw;
   grid-template-rows: ${GRID_ROW_HEADER}vh ${GRID_ROW_BUTTON}vh 65vh ${GRID_ROW_BUTTON}vh;
   grid-template-areas:
     "header header status"
@@ -32,28 +46,24 @@ const StyledHeader = styled(ChapterHeader)`
   grid-area: header;
 `;
 
-const StyledTopWrapper = styled(ActionButton)`
-  grid-area: top;
-  background-color: #eeeeee;
-`;
-
 const StyledStatus = styled(WebGazer)`
   grid-area: status;
+  align-self: center;
+`;
+const StyledTopWrapper = styled(ActionButton)`
+  grid-area: top;
 `;
 
 const StyledDownWrapper = styled(ActionButton)`
   grid-area: down;
-  background-color: #eeeeee;
 `;
 
-const StyledLeftWrapper = styled.div`
+const StyledLeftWrapper = styled(ActionButton)`
   grid-area: left;
-  background-color: #fafafa;
 `;
 
-const StyledRightWrapper = styled.div`
+const StyledRightWrapper = styled(ActionButton)`
   grid-area: right;
-  background-color: #fafafa;
 `;
 
 const StyledChapter = styled.div`
@@ -62,79 +72,125 @@ const StyledChapter = styled.div`
 `;
 
 function ChapterPage({ book, chapter }) {
+  const router = useRouter();
   const contentRef = useRef(null);
   const [progressUp, setProgressUp] = useState(0);
   const [progressDown, setProgressDown] = useState(0);
+  const [progressLeft, setProgressLeft] = useState(0);
+  const [progressRight, setProgressRight] = useState(0);
+  const [disabledUp, setDisabledUp] = useState(true);
+  const [disabledDown, setDisabledDown] = useState(true);
 
-  const scrollUp = () => scrollElement(-100);
-  const scrollDown = () => scrollElement(100);
+  useEffect(() => {
+    contentRef.current.scrollTo(0, 0);
+    onScroll();
+  }, [chapter]);
 
-  const scrollElement = (value) => {
+  const scrollUp = () => scrollContent(-100);
+  const scrollDown = () => scrollContent(100);
+
+  const scrollContent = (value) => {
     contentRef.current.scrollBy({
       top: value,
       behavior: "smooth",
     });
   };
 
-  const onScroll = (element) => {
-    if (element.scrollTop <= 0) {
-      console.log("top");
-    } else if (
-      element.scrollTop >=
-      element.scrollHeight - element.offsetHeight
-    ) {
-      console.log("bottom");
+  const onScroll = () => {
+    const element = contentRef.current;
+
+    const top = element.scrollTop <= 0;
+    const bottom =
+      element.scrollTop >= element.scrollHeight - element.offsetHeight;
+
+    setDisabledUp(top);
+    setDisabledDown(bottom);
+  };
+
+  const previousChapter = () =>
+    chapter.previous && router.push(`/books/${book.path}/${chapter.previous}`);
+
+  const nextChapter = () =>
+    chapter.next && router.push(`/books/${book.path}/${chapter.next}`);
+
+  const getPoint = (x, y, timestamp) => {
+    if (lookDirection == DIRECTION_STOP) return;
+
+    const boundaries = getBoundaries(
+      GRID_ROW_HEADER,
+      GRID_COLUMN_BUTTON,
+      GRID_ROW_BUTTON
+    );
+    const newDirection = getDirection(x, y, boundaries);
+    if (lookDirection != newDirection) {
+      startLookTime =
+        newDirection != null ? timestamp : Number.POSITIVE_INFINITY;
+      lookDirection = newDirection;
+    }
+
+    setProgress(lookDirection, startLookTime, timestamp);
+
+    if (startLookTime + LOOK_DELAY < timestamp) {
+      const direction = lookDirection;
+      lookDirection = DIRECTION_STOP;
+
+      lookDirection = execAction(direction);
+      startLookTime = Number.POSITIVE_INFINITY;
     }
   };
 
-  const LOOK_DELAY = 1000;
-  let startLookTime = Number.POSITIVE_INFINITY;
-  let lookDirection = null;
+  const setProgress = (lookDirection, startLookTime, timestamp) => {
+    const progress =
+      lookDirection != null ? (timestamp - startLookTime) / LOOK_DELAY : 0;
 
-  const getPoint = (x, y, timestamp) => {
-    //if (lookDirection === "STOP") return;
-
-    const vh = window.innerHeight / 100;
-    const UP_START = GRID_ROW_HEADER * vh;
-    const UP_END = (GRID_ROW_HEADER + GRID_ROW_BUTTON) * vh;
-    const DOWN_START = window.innerHeight - GRID_ROW_BUTTON * vh;
-    const DOWN_END = window.innerHeight;
-
-    if (y >= UP_START && y <= UP_END) {
-      if (lookDirection !== "UP") {
-        startLookTime = timestamp;
-        console.log("up");
-      }
-      lookDirection = "UP";
-    } else if (y >= DOWN_START && y <= DOWN_END) {
-      if (lookDirection !== "DOWN") {
-        startLookTime = timestamp;
-        console.log("down");
-      }
-      lookDirection = "DOWN";
-    } else {
-      startLookTime = Number.POSITIVE_INFINITY;
-      lookDirection = null;
+    switch (lookDirection) {
+      case DIRECTION_UP:
+        setProgressUp(progress);
+        setProgressDown(0);
+        setProgressLeft(0);
+        setProgressRight(0);
+        break;
+      case DIRECTION_DOWN:
+        setProgressDown(progress);
+        setProgressUp(0);
+        setProgressLeft(0);
+        setProgressRight(0);
+        break;
+      case DIRECTION_LEFT:
+        setProgressLeft(progress);
+        setProgressUp(0);
+        setProgressDown(0);
+        setProgressRight(0);
+        break;
+      case DIRECTION_RIGHT:
+        setProgressRight(progress);
+        setProgressUp(0);
+        setProgressDown(0);
+        setProgressLeft(0);
+        break;
+      default:
+        setProgressUp(0);
+        setProgressDown(0);
+        setProgressLeft(0);
+        setProgressRight(0);
+        break;
     }
-    if (lookDirection) {
-      const progress = (timestamp - startLookTime) / LOOK_DELAY;
-      if (lookDirection === "UP") setProgressUp(progress);
-      if (lookDirection === "DOWN") setProgressDown(progress);
-    } else {
-      setProgressUp(0);
-      setProgressDown(0);
-    }
-    //console.log(progress);
+  };
 
-    if (startLookTime + LOOK_DELAY < timestamp) {
-      if (lookDirection === "UP") scrollUp();
-
-      if (lookDirection === "DOWN") scrollDown();
-
-      console.log(lookDirection);
-
-      startLookTime = Number.POSITIVE_INFINITY;
-      lookDirection = "";
+  const execAction = (lookDirection) => {
+    switch (lookDirection) {
+      case DIRECTION_UP:
+        scrollUp();
+        return null;
+      case DIRECTION_DOWN:
+        scrollDown();
+        return null;
+      case DIRECTION_LEFT:
+        previousChapter();
+        return DIRECTION_LEFT;
+      case DIRECTION_RIGHT:
+        nextChapter();
+        return DIRECTION_RIGHT;
     }
   };
 
@@ -142,46 +198,39 @@ function ChapterPage({ book, chapter }) {
     <StyledWrapper>
       <StyledHeader book={book} />
 
-      <StyledStatus getPoint={getPoint} />
+      <StyledStatus getPoint={getPoint} book={book} chapter={chapter} />
 
       <StyledTopWrapper
         type={ARROW_UP}
         progress={progressUp}
-        action={scrollUp}
+        action={() => execAction(DIRECTION_UP)}
+        disabled={disabledUp}
       />
 
       <StyledDownWrapper
         type={ARROW_DOWN}
         progress={progressDown}
-        action={scrollDown}
+        action={() => execAction(DIRECTION_DOWN)}
+        disabled={disabledDown}
       />
 
-      <StyledChapter
-        ref={contentRef}
-        onScroll={() => onScroll(contentRef.current)}
-      >
+      <StyledChapter ref={contentRef} onScroll={onScroll}>
         <Chapter chapter={chapter} />
       </StyledChapter>
 
-      <StyledLeftWrapper>
-        {chapter.previous && (
-          <Link href={`/books/${book.path}/${chapter.previous}`}>
-            <a>
-              <ProgressArrow type={ARROW_LEFT} />
-            </a>
-          </Link>
-        )}
-      </StyledLeftWrapper>
+      <StyledLeftWrapper
+        type={ARROW_LEFT}
+        progress={progressLeft}
+        action={() => execAction(DIRECTION_LEFT)}
+        disabled={chapter.previous == null}
+      />
 
-      <StyledRightWrapper>
-        {chapter.next && (
-          <Link href={`/books/${book.path}/${chapter.next}`}>
-            <a>
-              <ProgressArrow type={ARROW_RIGHT} />
-            </a>
-          </Link>
-        )}
-      </StyledRightWrapper>
+      <StyledRightWrapper
+        type={ARROW_RIGHT}
+        progress={progressRight}
+        action={() => execAction(DIRECTION_RIGHT)}
+        disabled={chapter.next == null}
+      />
     </StyledWrapper>
   );
 }

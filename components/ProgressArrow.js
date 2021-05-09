@@ -12,7 +12,7 @@ const StyledWrapper = styled.div`
   justify-content: center;
   align-items: center;
   background: white;
-  transition: background-color 1s;
+
   ${({ progress }) =>
     progress > 0 &&
     css`
