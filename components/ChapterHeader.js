@@ -1,4 +1,5 @@
 import Link from "next/link";
+import PropTypes from "prop-types";
 import styled from "styled-components";
 
 const StyledWrapper = styled.header`
@@ -28,7 +29,7 @@ const ChapterHeader = ({ book, className }) => {
     <StyledWrapper className={className}>
       <Link href="/">
         <StyledLink title="Strona główna">
-          <img src="/assets/book-icon.svg" />
+          <img src="/assets/logo-icon.svg" />
         </StyledLink>
       </Link>
 
@@ -44,3 +45,11 @@ const ChapterHeader = ({ book, className }) => {
 };
 
 export default ChapterHeader;
+
+ChapterHeader.propTypes = {
+  book: PropTypes.shape({
+    path: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+  }),
+  className: PropTypes.string,
+};

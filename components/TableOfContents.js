@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React from "react";
+import PropTypes from "prop-types";
 import styled from "styled-components";
 
 const StyledList = styled.ol``;
@@ -24,3 +24,14 @@ const TableOfContents = ({ chapters, bookPath }) => {
 };
 
 export default TableOfContents;
+
+TableOfContents.propTypes = {
+  bookPath: PropTypes.string.isRequired,
+  chapters: PropTypes.arrayOf(
+    PropTypes.shape({
+      path: PropTypes.string.isRequired,
+      title: PropTypes.string.isRequired,
+      order: PropTypes.number,
+    })
+  ),
+};

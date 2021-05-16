@@ -1,15 +1,15 @@
 import { getBooks, getBook } from "../../helpers/booksData";
 import Book from "../../components/Book";
-import styled from 'styled-components'
+import styled from "styled-components";
 
-const StyledWrapper=styled.div`
-
-`
+const StyledWrapper = styled.div``;
 
 function BookPage({ book }) {
+  const { path, title, chapters } = book;
+
   return (
     <StyledWrapper>
-        <Book book={book}/>
+      <Book path={path} title={title} chapters={chapters} />
     </StyledWrapper>
   );
 }

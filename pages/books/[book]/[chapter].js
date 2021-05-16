@@ -1,24 +1,23 @@
 import { useRouter } from "next/router";
+import { useEffect, useReducer, useRef, useState } from "react";
 import styled from "styled-components";
 import { getBooks, getChapter } from "../../../helpers/booksData";
+import { getBoundaries } from "../../../helpers/buttonsHelper";
 import {
-  getBoundaries,
-  getDirection,
+  pointToDirection,
   DIRECTION_UP,
   DIRECTION_DOWN,
   DIRECTION_LEFT,
   DIRECTION_RIGHT,
   DIRECTION_STOP,
-} from "../../../helpers/buttonsHelper";
-import Chapter from "../../../components/Chapter";
+} from "../../../helpers/directionsHelper";
 import {
-  ARROW_UP,
-  ARROW_DOWN,
-  ARROW_LEFT,
-  ARROW_RIGHT,
-} from "../../../components/ProgressArrow";
+  progressReducer,
+  initialProgress,
+  getProgress,
+} from "../../../helpers/progressHelper";
+import Chapter from "../../../components/Chapter";
 import ActionButton from "../../../components/ActionButton";
-import { useEffect, useRef, useState } from "react";
 import ChapterHeader from "../../../components/ChapterHeader";
 import WebGazer from "../../../components/WebGazer";
 
@@ -26,7 +25,8 @@ const GRID_ROW_HEADER = 5;
 const GRID_ROW_BUTTON = 15;
 const GRID_COLUMN_BUTTON = 15;
 
-const LOOK_DELAY = 500;
+const SCROLL_VALUE = 100;
+const ACTION_DELAY = 500;
 let startLookTime = Number.POSITIVE_INFINITY;
 let lookDirection = null;
 
@@ -46,10 +46,11 @@ const StyledHeader = styled(ChapterHeader)`
   grid-area: header;
 `;
 
-const StyledStatus = styled(WebGazer)`
+const StyledWebGazer = styled(WebGazer)`
   grid-area: status;
   align-self: center;
 `;
+
 const StyledTopWrapper = styled(ActionButton)`
   grid-area: top;
 `;
@@ -66,7 +67,7 @@ const StyledRightWrapper = styled(ActionButton)`
   grid-area: right;
 `;
 
-const StyledChapter = styled.div`
+const StyledContent = styled.div`
   grid-area: content;
   overflow: auto;
 `;
@@ -74,46 +75,36 @@ const StyledChapter = styled.div`
 function ChapterPage({ book, chapter }) {
   const router = useRouter();
   const contentRef = useRef(null);
-  const [progressUp, setProgressUp] = useState(0);
-  const [progressDown, setProgressDown] = useState(0);
-  const [progressLeft, setProgressLeft] = useState(0);
-  const [progressRight, setProgressRight] = useState(0);
-  const [disabledUp, setDisabledUp] = useState(true);
-  const [disabledDown, setDisabledDown] = useState(true);
+
+  const [upDownDisabled, setUpDownDisabled] = useState({});
+
+  const [progress, dispatchProgress] = useReducer(
+    progressReducer,
+    initialProgress
+  );
 
   useEffect(() => {
     contentRef.current.scrollTo(0, 0);
-    onScroll();
+    checkUpDownAvailability();
   }, [chapter]);
 
-  const scrollUp = () => scrollContent(-100);
-  const scrollDown = () => scrollContent(100);
+  const checkUpDownAvailability = () => {
+    const content = contentRef.current;
 
-  const scrollContent = (value) => {
-    contentRef.current.scrollBy({
-      top: value,
-      behavior: "smooth",
-    });
+    const isTop = content.scrollTop <= 0;
+    const isBottom =
+      content.scrollTop >= content.scrollHeight - content.offsetHeight - 5;
+
+    setUpDownDisabled({ up: isTop, down: isBottom });
   };
 
-  const onScroll = () => {
-    const element = contentRef.current;
+  const scrollContent = (value) =>
+    contentRef.current.scrollBy({ top: value, behavior: "smooth" });
 
-    const top = element.scrollTop <= 0;
-    const bottom =
-      element.scrollTop >= element.scrollHeight - element.offsetHeight;
+  const changeChapter = (bookPath, chapterPath) =>
+    router.push(`/books/${bookPath}/${chapterPath}`);
 
-    setDisabledUp(top);
-    setDisabledDown(bottom);
-  };
-
-  const previousChapter = () =>
-    chapter.previous && router.push(`/books/${book.path}/${chapter.previous}`);
-
-  const nextChapter = () =>
-    chapter.next && router.push(`/books/${book.path}/${chapter.next}`);
-
-  const getPoint = (x, y, timestamp) => {
+  const lookPoint = (x, y, timestamp) => {
     if (lookDirection == DIRECTION_STOP) return;
 
     const boundaries = getBoundaries(
@@ -121,16 +112,23 @@ function ChapterPage({ book, chapter }) {
       GRID_COLUMN_BUTTON,
       GRID_ROW_BUTTON
     );
-    const newDirection = getDirection(x, y, boundaries);
-    if (lookDirection != newDirection) {
+    const currentDirection = pointToDirection(x, y, boundaries);
+
+    if (lookDirection != currentDirection) {
       startLookTime =
-        newDirection != null ? timestamp : Number.POSITIVE_INFINITY;
-      lookDirection = newDirection;
+        currentDirection != null ? timestamp : Number.POSITIVE_INFINITY;
+      lookDirection = currentDirection;
     }
 
-    setProgress(lookDirection, startLookTime, timestamp);
+    dispatchProgress({
+      type: lookDirection,
+      payload:
+        lookDirection != null
+          ? getProgress(startLookTime, timestamp, ACTION_DELAY)
+          : 0,
+    });
 
-    if (startLookTime + LOOK_DELAY < timestamp) {
+    if (startLookTime + ACTION_DELAY < timestamp) {
       const direction = lookDirection;
       lookDirection = DIRECTION_STOP;
 
@@ -139,57 +137,19 @@ function ChapterPage({ book, chapter }) {
     }
   };
 
-  const setProgress = (lookDirection, startLookTime, timestamp) => {
-    const progress =
-      lookDirection != null ? (timestamp - startLookTime) / LOOK_DELAY : 0;
-
-    switch (lookDirection) {
-      case DIRECTION_UP:
-        setProgressUp(progress);
-        setProgressDown(0);
-        setProgressLeft(0);
-        setProgressRight(0);
-        break;
-      case DIRECTION_DOWN:
-        setProgressDown(progress);
-        setProgressUp(0);
-        setProgressLeft(0);
-        setProgressRight(0);
-        break;
-      case DIRECTION_LEFT:
-        setProgressLeft(progress);
-        setProgressUp(0);
-        setProgressDown(0);
-        setProgressRight(0);
-        break;
-      case DIRECTION_RIGHT:
-        setProgressRight(progress);
-        setProgressUp(0);
-        setProgressDown(0);
-        setProgressLeft(0);
-        break;
-      default:
-        setProgressUp(0);
-        setProgressDown(0);
-        setProgressLeft(0);
-        setProgressRight(0);
-        break;
-    }
-  };
-
   const execAction = (lookDirection) => {
     switch (lookDirection) {
       case DIRECTION_UP:
-        scrollUp();
+        scrollContent(-SCROLL_VALUE);
         return null;
       case DIRECTION_DOWN:
-        scrollDown();
+        scrollContent(SCROLL_VALUE);
         return null;
       case DIRECTION_LEFT:
-        previousChapter();
+        chapter.previous && changeChapter(book.path, chapter.previous);
         return DIRECTION_LEFT;
       case DIRECTION_RIGHT:
-        nextChapter();
+        chapter.next && changeChapter(book.path, chapter.next);
         return DIRECTION_RIGHT;
     }
   };
@@ -198,36 +158,36 @@ function ChapterPage({ book, chapter }) {
     <StyledWrapper>
       <StyledHeader book={book} />
 
-      <StyledStatus getPoint={getPoint} book={book} chapter={chapter} />
+      <StyledWebGazer lookPoint={lookPoint} book={book} chapter={chapter} />
 
       <StyledTopWrapper
-        type={ARROW_UP}
-        progress={progressUp}
+        type={DIRECTION_UP}
+        progress={progress.up}
         action={() => execAction(DIRECTION_UP)}
-        disabled={disabledUp}
+        disabled={upDownDisabled.up}
       />
 
       <StyledDownWrapper
-        type={ARROW_DOWN}
-        progress={progressDown}
+        type={DIRECTION_DOWN}
+        progress={progress.down}
         action={() => execAction(DIRECTION_DOWN)}
-        disabled={disabledDown}
+        disabled={upDownDisabled.down}
       />
 
-      <StyledChapter ref={contentRef} onScroll={onScroll}>
-        <Chapter chapter={chapter} />
-      </StyledChapter>
+      <StyledContent ref={contentRef} onScroll={checkUpDownAvailability}>
+        <Chapter title={chapter.title} content={chapter.content} />
+      </StyledContent>
 
       <StyledLeftWrapper
-        type={ARROW_LEFT}
-        progress={progressLeft}
+        type={DIRECTION_LEFT}
+        progress={progress.left}
         action={() => execAction(DIRECTION_LEFT)}
         disabled={chapter.previous == null}
       />
 
       <StyledRightWrapper
-        type={ARROW_RIGHT}
-        progress={progressRight}
+        type={DIRECTION_RIGHT}
+        progress={progress.right}
         action={() => execAction(DIRECTION_RIGHT)}
         disabled={chapter.next == null}
       />
