@@ -1,9 +1,7 @@
 const WEBGAZER_SCRIPT_ID = "webGazerScript";
 
 export function initWebGazer(setIsReady) {
-  const scriptId = WEBGAZER_SCRIPT_ID;
-  const currentScript = document.getElementById(scriptId);
-
+  const currentScript = document.getElementById(WEBGAZER_SCRIPT_ID);
   currentScript ? handleScriptLoad(setIsReady, true) : loadScript(setIsReady);
 }
 
@@ -67,5 +65,5 @@ export function showPredictionPoints(showPoints) {
 }
 
 export function showPreview(preview) {
-  webgazer.showVideoPreview(preview).resume;
+  webgazer.showVideoPreview(preview);
 }

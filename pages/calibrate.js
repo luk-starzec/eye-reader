@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import HomeButton from "../components/Shared/HomeButton";
-import WebGazer from "../components/WebGazer";
+import WebGazer from "../components/Shared/WebGazer";
 
 const StyledHeader = styled.header`
   display: flex;

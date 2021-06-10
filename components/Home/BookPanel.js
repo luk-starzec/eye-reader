@@ -71,4 +71,5 @@ BookPanel.propTypes = {
   path: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   chapters: PropTypes.array.isRequired,
+  className: PropTypes.string,
 };

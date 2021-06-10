@@ -19,7 +19,7 @@ import {
 import Chapter from "../../../components/Chapter/Chapter";
 import ActionButton from "../../../components/Chapter/ActionButton";
 import ChapterHeader from "../../../components/Chapter/ChapterHeader";
-import WebGazer from "../../../components/WebGazer";
+import WebGazer from "../../../components/Shared/WebGazer";
 
 const GRID_ROW_HEADER = 5;
 const GRID_ROW_BUTTON = 15;

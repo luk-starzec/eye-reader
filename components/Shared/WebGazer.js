@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import styled, { keyframes } from "styled-components";
 import {
   initWebGazer,
@@ -7,8 +8,7 @@ import {
   resetData,
   resetListener,
   showPredictionPoints,
-  showPreview,
-} from "../helpers/webGazerHelper";
+} from "../../helpers/webGazerHelper";
 
 const StyledWrapper = styled.div`
   position: relative;
@@ -22,7 +22,6 @@ const rotate = keyframes`
   from {
     transform: rotate(0deg);
   }
-
   to {
     transform: rotate(360deg);
   }
@@ -55,21 +54,6 @@ const StyledButton = styled.button`
   }
 `;
 
-// const resetListener = (lookPoint) => {
-//   webgazer.clearGazeListener();
-//   webgazer.setGazeListener((data, timestamp) => {
-//     if (data != null && lookPoint != null) {
-//       lookPoint(data.x, data.y, timestamp);
-//     }
-//   });
-// };
-
-// const resetData = () => {
-//   if (webgazer) {
-//     webgazer.clearData();
-//   }
-// };
-
 const WebGazer = ({ lookPoint, book, chapter, className, preview = false }) => {
   const [isReady, setIsReady] = useState(false);
   const [isRunning, setIsRunning] = useState(true);
@@ -77,13 +61,6 @@ const WebGazer = ({ lookPoint, book, chapter, className, preview = false }) => {
 
   useEffect(() => {
     initWebGazer(setIsReady);
-    // const scriptId = WEBGAZER_SCRIPT_ID;
-    // const currentScript = document.getElementById(scriptId);
-
-    // currentScript
-    //   ? handleScriptLoad(setIsReady, true, preview)
-    //   : loadScript(setIsReady);
-
     return () => pauseDataCollection(setIsRunning);
   }, []);
 
@@ -91,49 +68,12 @@ const WebGazer = ({ lookPoint, book, chapter, className, preview = false }) => {
     isReady && resetListener(lookPoint);
   }, [book, chapter, isReady]);
 
-  // const loadScript = (setIsReady) => {
-  //   const script = document.createElement("script");
-  //   script.src = "https://webgazer.cs.brown.edu/webgazer.js";
-  //   script.id = WEBGAZER_SCRIPT_ID;
-  //   script.async = true;
-  //   script.onload = () => handleScriptLoad(setIsReady, false, false );
-  //   document.body.appendChild(script);
-  // };
-
-  // const handleScriptLoad = (resume = false) => {
-  //   window.saveDataAcrossSessions = true;
-
-  //   let readinessCounter = 0;
-  //   webgazer.setGazeListener((data, timestamp) => {
-  //     readinessCounter++;
-  //     if (readinessCounter > 5) setIsReady(true);
-  //   });
-
-  //   resume ? webgazer.resume() : webgazer.begin();
-
-  //   webgazer.showVideoPreview(preview).showPredictionPoints(true);
-  // };
-
-  // const pauseDataCollection = () => {
-  //   if (webgazer) {
-  //     webgazer.clearGazeListener();
-  //     webgazer.showPredictionPoints(false);
-  //     webgazer.pause();
-  //     setIsRunning(false);
-  //   }
-  // };
-  // const resumeDataCollection = () => {
-  //   if (webgazer) {
-  //     webgazer.resume();
-  //     setIsRunning(true);
-  //   }
-  // };
-
   const changePointVisibility = () => {
-    showPredictionPoints(!predictionPoint);
-    setPredictionPoint(!predictionPoint);
+    const visibility = !predictionPoint;
+    showPredictionPoints(visibility);
+    setPredictionPoint(visibility);
   };
-  
+
   return (
     <StyledWrapper className={className}>
       {!isReady && <StyledWaitImg src="/assets/wait-icon.svg" />}
@@ -155,6 +95,7 @@ const WebGazer = ({ lookPoint, book, chapter, className, preview = false }) => {
           >
             <img src="/assets/pause-icon.svg" />
           </StyledButton>
+
           <StyledButton
             onClick={changePointVisibility}
             title={predictionPoint ? "Ukryj wskaźnik" : "Pokaż wskaźnik"}
@@ -167,6 +108,7 @@ const WebGazer = ({ lookPoint, book, chapter, className, preview = false }) => {
               }
             />
           </StyledButton>
+
           <StyledButton
             onClick={resetData}
             title="Resetuj dane algorytmu śledzenia"
@@ -180,3 +122,10 @@ const WebGazer = ({ lookPoint, book, chapter, className, preview = false }) => {
 };
 
 export default WebGazer;
+
+WebGazer.propTypes = {
+  bookPath: PropTypes.object,
+  chapters: PropTypes.object,
+  lookPoint: PropTypes.func,
+  className: PropTypes.string,
+};

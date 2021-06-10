@@ -87,4 +87,5 @@ TableOfContents.propTypes = {
       order: PropTypes.number,
     })
   ),
+  className: PropTypes.string,
 };
