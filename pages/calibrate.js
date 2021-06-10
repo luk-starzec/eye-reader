@@ -1,17 +1,19 @@
 import styled from "styled-components";
+import HomeButton from "../components/Shared/HomeButton";
 import WebGazer from "../components/WebGazer";
 
-const StyledWrapper = styled.div`
-  width: 100%;
+const StyledHeader = styled.header`
   display: flex;
   justify-content: flex-end;
 `;
 
-function CalibratePage({ book }) {
+
+function CalibratePage() {
   return (
-    <StyledWrapper>
+    <StyledHeader>
+      <HomeButton />
       <WebGazer preview={true} />
-    </StyledWrapper>
+    </StyledHeader>
   );
 }
 

@@ -1,0 +1,140 @@
+{
+  "title": "Ewangelia wg św. Mateusza",
+  "chapters": [
+    {
+      "title": "Rozdział 1",
+      "order": 1,
+      "path": "rozdzial-1"
+    },
+    {
+      "title": "Rozdział 2",
+      "order": 2,
+      "path": "rozdzial-2"
+    },
+    {
+      "title": "Rozdział 3",
+      "order": 3,
+      "path": "rozdzial-3"
+    },
+    {
+      "title": "Rozdział 4",
+      "order": 4,
+      "path": "rozdzial-4"
+    },
+    {
+      "title": "Rozdział 5",
+      "order": 5,
+      "path": "rozdzial-5"
+    },
+    {
+      "title": "Rozdział 6",
+      "order": 6,
+      "path": "rozdzial-6"
+    },
+    {
+      "title": "Rozdział 7",
+      "order": 7,
+      "path": "rozdzial-7"
+    },
+    {
+      "title": "Rozdział 8",
+      "order": 8,
+      "path": "rozdzial-8"
+    },
+    {
+      "title": "Rozdział 9",
+      "order": 9,
+      "path": "rozdzial-9"
+    },
+    {
+      "title": "Rozdział 10",
+      "order": 10,
+      "path": "rozdzial-10"
+    },
+    {
+      "title": "Rozdział 11",
+      "order": 11,
+      "path": "rozdzial-11"
+    },
+    {
+      "title": "Rozdział 12",
+      "order": 12,
+      "path": "rozdzial-13"
+    },
+    {
+      "title": "Rozdział 14",
+      "order": 14,
+      "path": "rozdzial-14"
+    },
+    {
+      "title": "Rozdział 15",
+      "order": 15,
+      "path": "rozdzial-15"
+    },
+    {
+      "title": "Rozdział 16",
+      "order": 16,
+      "path": "rozdzial-16"
+    },
+    {
+      "title": "Rozdział 17",
+      "order": 17,
+      "path": "rozdzial-17"
+    },
+    {
+      "title": "Rozdział 18",
+      "order": 18,
+      "path": "rozdzial-18"
+    },
+    {
+      "title": "Rozdział 19",
+      "order": 19,
+      "path": "rozdzial-19"
+    },
+    {
+      "title": "Rozdział 20",
+      "order": 20,
+      "path": "rozdzial-20"
+    },
+    {
+      "title": "Rozdział 21",
+      "order": 21,
+      "path": "rozdzial-21"
+    },
+    {
+      "title": "Rozdział 22",
+      "order": 22,
+      "path": "rozdzial-22"
+    },
+    {
+      "title": "Rozdział 23",
+      "order": 23,
+      "path": "rozdzial-23"
+    },
+    {
+      "title": "Rozdział 24",
+      "order": 24,
+      "path": "rozdzial-24"
+    },
+    {
+      "title": "Rozdział 25",
+      "order": 25,
+      "path": "rozdzial-25"
+    },
+    {
+      "title": "Rozdział 26",
+      "order": 26,
+      "path": "rozdzial-26"
+    },
+    {
+      "title": "Rozdział 27",
+      "order": 27,
+      "path": "rozdzial-27"
+    },
+    {
+      "title": "Rozdział 28",
+      "order": 28,
+      "path": "rozdzial-28"
+    }
+  ]
+}

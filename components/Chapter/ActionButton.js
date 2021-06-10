@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import styled, { css } from "styled-components";
-import { ARROW_DIRECTIONS } from "../helpers/directionsHelper";
+import { ARROW_DIRECTIONS } from "../../helpers/directionsHelper";
 import ProgressArrow from "./ProgressArrow";
 
 const StyledWrapper = styled.button`

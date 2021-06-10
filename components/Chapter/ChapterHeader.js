@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 const StyledWrapper = styled.header`
   display: flex;
+  box-shadow: -0.25em 0.25em 0.25em rgba(0, 0, 0, 0.1);
 `;
 
 const StyledLink = styled.a`
@@ -12,6 +13,8 @@ const StyledLink = styled.a`
   display: flex;
   justify-content: center;
   border: 1px solid #eeeeee;
+  z-index: 1;
+  box-shadow: 0em 0.25em 0.25em rgba(0, 0, 0, 0.05);
 
   img {
     height: 100%;

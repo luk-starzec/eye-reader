@@ -7,7 +7,7 @@ import {
   DIRECTION_LEFT,
   DIRECTION_RIGHT,
   ARROW_DIRECTIONS,
-} from "../helpers/directionsHelper";
+} from "../../helpers/directionsHelper";
 
 const StyledWrapper = styled.div`
   position: relative;

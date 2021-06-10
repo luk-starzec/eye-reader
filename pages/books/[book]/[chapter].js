@@ -16,9 +16,9 @@ import {
   initialProgress,
   getProgress,
 } from "../../../helpers/progressHelper";
-import Chapter from "../../../components/Chapter";
-import ActionButton from "../../../components/ActionButton";
-import ChapterHeader from "../../../components/ChapterHeader";
+import Chapter from "../../../components/Chapter/Chapter";
+import ActionButton from "../../../components/Chapter/ActionButton";
+import ChapterHeader from "../../../components/Chapter/ChapterHeader";
 import WebGazer from "../../../components/WebGazer";
 
 const GRID_ROW_HEADER = 5;
@@ -27,6 +27,7 @@ const GRID_COLUMN_BUTTON = 15;
 
 const SCROLL_VALUE = 100;
 const ACTION_DELAY = 500;
+
 let startLookTime = Number.POSITIVE_INFINITY;
 let lookDirection = null;
 
@@ -75,9 +76,7 @@ const StyledContent = styled.div`
 function ChapterPage({ book, chapter }) {
   const router = useRouter();
   const contentRef = useRef(null);
-
   const [upDownDisabled, setUpDownDisabled] = useState({});
-
   const [progress, dispatchProgress] = useReducer(
     progressReducer,
     initialProgress
@@ -210,7 +209,6 @@ export async function getStaticPaths() {
     )
     .flat();
 
-  //console.log(paths);
   return {
     paths,
     fallback: false,
@@ -221,7 +219,6 @@ export async function getStaticProps(context) {
   const { book: bookPath, chapter: chapterPath } = context.params;
 
   const data = await getChapter(bookPath, chapterPath);
-  //console.log(data);
 
   return {
     props: data,

@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 
 const StyledWrapper = styled.div`
   padding: max(2em, 10vmin);
+  padding-top: max(2em, 5vmin);
 `;
 
 const Chapter = ({ title, content }) => {
