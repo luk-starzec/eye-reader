@@ -30,20 +30,8 @@ const StyledItem = styled.li`
 `;
 
 const StyledMaskedItem = styled(StyledItem)`
-  opacity: 0.5;
-`;
-
-const StyledFader = styled.div`
-  position: absolute;
-  height: 15%;
-  width: 100%;
-  bottom: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.3) 0%,
-    rgba(255, 255, 255, 0.7) 25%,
-    rgba(255, 255, 255, 1) 100%
-  );
+  opacity: 0.3;
+  pointer-events: none;
 `;
 
 const TableOfContents = ({ chapters, bookPath, fullView, className }) => {
@@ -71,7 +59,6 @@ const TableOfContents = ({ chapters, bookPath, fullView, className }) => {
           </StyledMaskedItem>
         )}
       </StyledList>
-      {isMore && <StyledFader />}
     </>
   );
 };

@@ -1,5 +1,5 @@
 {
-  "title": "Ewangelia wg św. Mateusza",
+  "title": "Ewangelia wg św. Marka",
   "chapters": [
     {
       "title": "Rozdział 1",
@@ -77,68 +77,8 @@
       "path": "rozdzial-16"
     },
     {
-      "title": "Rozdział 17",
-      "order": 17,
-      "path": "rozdzial-17"
-    },
-    {
-      "title": "Rozdział 18",
-      "order": 18,
-      "path": "rozdzial-18"
-    },
-    {
-      "title": "Rozdział 19",
-      "order": 19,
-      "path": "rozdzial-19"
-    },
-    {
-      "title": "Rozdział 20",
-      "order": 20,
-      "path": "rozdzial-20"
-    },
-    {
-      "title": "Rozdział 21",
-      "order": 21,
-      "path": "rozdzial-21"
-    },
-    {
-      "title": "Rozdział 22",
-      "order": 22,
-      "path": "rozdzial-22"
-    },
-    {
-      "title": "Rozdział 23",
-      "order": 23,
-      "path": "rozdzial-23"
-    },
-    {
-      "title": "Rozdział 24",
-      "order": 24,
-      "path": "rozdzial-24"
-    },
-    {
-      "title": "Rozdział 25",
-      "order": 25,
-      "path": "rozdzial-25"
-    },
-    {
-      "title": "Rozdział 26",
-      "order": 26,
-      "path": "rozdzial-26"
-    },
-    {
-      "title": "Rozdział 27",
-      "order": 27,
-      "path": "rozdzial-27"
-    },
-    {
-      "title": "Rozdział 28",
-      "order": 28,
-      "path": "rozdzial-28"
-    },
-    {
       "title": "Źródło",
-      "order": 29,
+      "order": 17,
       "path": "zrodlo"
     }
   ]

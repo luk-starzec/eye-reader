@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 const StyledWrapper = styled.header`
   display: flex;
-  box-shadow: -0.25em 0.25em 0.25em rgba(0, 0, 0, 0.1);
+  box-shadow: -0.25em 0.25em 0.25em var(--shadow-1);
 `;
 
 const StyledLink = styled.a`
@@ -12,12 +12,20 @@ const StyledLink = styled.a`
   padding: 0 0.5em;
   display: flex;
   justify-content: center;
-  border: 1px solid #eeeeee;
+  border: 1px solid var(--surface-2);
   z-index: 1;
-  box-shadow: 0em 0.25em 0.25em rgba(0, 0, 0, 0.05);
+  box-shadow: 0em 0.25em 0.25em var(--shadow-2);
 
   img {
     height: 100%;
+  }
+`;
+
+const StyledHomeLink = styled(StyledLink)`
+  background-color: var(--logo);
+  
+  img {
+    filter: var(--logo-filter);
   }
 `;
 
@@ -31,9 +39,9 @@ const ChapterHeader = ({ book, className }) => {
   return (
     <StyledWrapper className={className}>
       <Link href="/">
-        <StyledLink title="Strona główna">
+        <StyledHomeLink title="Strona główna">
           <img src="/assets/logo-icon.svg" />
-        </StyledLink>
+        </StyledHomeLink>
       </Link>
 
       <Link href={`/books/${book.path}`}>

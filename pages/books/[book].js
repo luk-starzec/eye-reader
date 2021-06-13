@@ -21,8 +21,8 @@ const StyledTableOfContents = styled(TableOfContents)`
   flex-wrap: wrap;
   align-content: space-around;
   align-items: center;
-  border: 1px solid #f0f0f0;
-  box-shadow: 0.25em 0.25em 0.25em rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--surface-2);
+  box-shadow: 0.25em 0.25em 0.25em var(--shadow-2);
   overflow: auto;
 
   li {

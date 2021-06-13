@@ -16,6 +16,11 @@ const StyledWrapper = styled.div`
   min-height: 3em;
   display: flex;
   justify-content: flex-end;
+
+  @media (max-width: 500px) {
+    flex-direction: column-reverse;
+    justify-self: end;
+  }
 `;
 
 const rotate = keyframes`
@@ -33,24 +38,29 @@ const StyledWaitImg = styled.img`
 `;
 
 const StyledButton = styled.button`
-  background: #f0f0f0;
+  background: var(--surface-2);
   border: none;
-  border-right: 1px solid #ffffff;
-  box-shadow: 0.25em 0.25em 0.25em rgba(0, 0, 0, 0.1);
-
+  border-right: 1px solid var(--surface-1);
+  box-shadow: 0.25em 0.25em 0.25em var(--shadow-1);
   cursor: pointer;
-  display: ${({ isHidden }) => (isHidden ? "none" : "block")};
+  display: ${({ isHidden }) => (isHidden ? "none" : "flex")};
+  justify-content: center;
+  align-items: center;
   width: 5vh;
   height: 5vh;
   min-width: 3em;
   min-height: 3em;
 
   &:hover {
-    background: #dddddd;
+    background: var(--surface-3);
   }
 
   img {
     height: 50%;
+  }
+
+  @media (max-width: 500px) {
+    border: none;
   }
 `;
 

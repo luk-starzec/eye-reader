@@ -11,21 +11,21 @@ import {
 
 const StyledWrapper = styled.div`
   position: relative;
-  border: solid 1px #cccccc;
+  background: var(--surface-1);
+  border: solid 1px var(--surface-3);
   border-radius: 50%;
   width: 8vmin;
   height: 8vmin;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: white;
 
   ${({ progress }) =>
     progress > 0 &&
     css`
       background: conic-gradient(
         lightgreen ${progress}turn,
-        white ${progress}turn
+        var(--surface-1) ${progress}turn
       );
     `}
 `;

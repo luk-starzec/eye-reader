@@ -4,6 +4,8 @@ import PropTypes from "prop-types";
 const StyledWrapper = styled.div`
   padding: max(2em, 10vmin);
   padding-top: max(2em, 5vmin);
+  color: var(--text-2);
+  background-color: var(--surface-1);
 `;
 
 const Chapter = ({ title, content }) => {

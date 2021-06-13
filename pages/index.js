@@ -26,22 +26,22 @@ const StyledFooter = styled.footer`
   bottom: 0;
   left: 0;
   right: 0;
-  background: #ffffff;
 `;
 
 const StyledLinkCalibration = styled.a`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 1em;
+  padding: 0.5em;
   margin: 0 0.5em 0.5em 0.5em;
-  background: #eeeeee;
-  color: #333333;
-  box-shadow: 0.25em 0.25em 0.25em rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  background: var(--surface-3);
+  color: var(--text-2);
+  box-shadow: 0.25em 0.25em 0.25em var(--shadow-1);
 
   img {
     margin: 0 1em;
-    filter: grayscale(100%);
+    filter: grayscale(100%) invert(var(--img-invert));
   }
 `;
 

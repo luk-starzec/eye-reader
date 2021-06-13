@@ -8,7 +8,7 @@ const StyledWrapper = styled.button`
   justify-content: center;
   align-items: center;
   border: none;
-  background-color: #eeeeee;
+  background-color: var(--surface-2);
 
   img {
     opacity: 0.7;
@@ -19,7 +19,7 @@ const StyledWrapper = styled.button`
     css`
       cursor: pointer;
       &:hover {
-        background: #dddddd;
+        background: var(--surface-3);
 
         img {
           opacity: 1;
